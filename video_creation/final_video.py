@@ -101,7 +101,12 @@ def make_final_video(
     # Gather all audio clips
     if settings.config["settings"]["storymode"]:
         if settings.config["settings"]["storymodemethod"] == 0:
-            audio_clips = [AudioFileClip(f"assets/temp/{reddit_id}/mp3/title.mp3")]
+            #audio_clips = [AudioFileClip(f"assets/temp/{reddit_id}/mp3/title.mp3")]
+            audio_clips = [
+                AudioFileClip(f"assets/temp/{reddit_id}/mp3/{i}.mp3")
+                for i in range(number_of_clips)
+            ]
+            audio_clips.insert(0, AudioFileClip(f"assets/temp/{reddit_id}/mp3/title.mp3"))
             audio_clips.insert(1, AudioFileClip(f"assets/temp/{reddit_id}/mp3/postaudio.mp3"))
         elif settings.config["settings"]["storymodemethod"] == 1:
             audio_clips = [
@@ -133,23 +138,23 @@ def make_final_video(
     image_clips.insert(
         0,
         ImageClip(f"assets/temp/{reddit_id}/png/title.png")
-        .set_duration(audio_clips[0].duration)
+        .set_duration(audio_clips[0].duration + audio_clips[1].duration)
         .resize(width=screenshot_width)
         .set_opacity(new_opacity)
         .crossfadein(new_transition)
         .crossfadeout(new_transition),
     )
     if settings.config["settings"]["storymode"]:
-        if settings.config["settings"]["storymodemethod"] == 0:
-            image_clips.insert(
-                1,
-                ImageClip(f"assets/temp/{reddit_id}/png/story_content.png")
-                .set_duration(audio_clips[1].duration)
-                .set_position("center")
-                .resize(width=screenshot_width)
-                .set_opacity(float(opacity)),
-            )
-        elif settings.config["settings"]["storymodemethod"] == 1:
+        # if settings.config["settings"]["storymodemethod"] == 0:
+        #     image_clips.insert(
+        #         1,
+        #         ImageClip(f"assets/temp/{reddit_id}/png/story_content.png")
+        #         .set_duration(audio_clips[1].duration)
+        #         .set_position("center")
+        #         .resize(width=screenshot_width)
+        #         .set_opacity(float(opacity)),
+        #     )
+        if settings.config["settings"]["storymodemethod"] == 1:
             for i in track(
                 range(0, number_of_clips + 1), "Collecting the image files..."
             ):
@@ -161,11 +166,10 @@ def make_final_video(
                     # .crossfadein(new_transition)
                     # .crossfadeout(new_transition)
                 )
-    else:
-        for i in range(0, number_of_clips):
+    for i in range(0, number_of_clips):
             image_clips.append(
                 ImageClip(f"assets/temp/{reddit_id}/png/comment_{i}.png")
-                .set_duration(audio_clips[i + 1].duration)
+                .set_duration(audio_clips[i + 2].duration)
                 .resize(width=screenshot_width)
                 .set_opacity(new_opacity)
                 .crossfadein(new_transition)

@@ -17,7 +17,7 @@ from utils import settings
 from utils.console import print_step, print_substep
 from utils.voice import sanitize_text
 
-DEFAULT_MAX_LENGTH: int = 50 # video length variable
+DEFAULT_MAX_LENGTH: int = 200 # video length variable
 
 
 class TTSEngine:
@@ -73,9 +73,7 @@ class TTSEngine:
                 for idx, text in track(enumerate(self.reddit_object["thread_post"])):
                     self.call_tts(f"postaudio-{idx}", process_text(text))
 
-        else:
-
-            for idx, comment in track(
+        for idx, comment in track(
                 enumerate(self.reddit_object["comments"]), "Saving..."
             ):
                 # ! Stop creating mp3 files if the length is greater than max length.

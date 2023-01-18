@@ -111,8 +111,7 @@ def get_screenshots_of_reddit_posts(reddit_object: dict, screenshot_num: int):
             page.locator('[data-click-id="text"]').first.screenshot(
                 path=f"assets/temp/{reddit_id}/png/story_content.png"
             )
-        else:
-            for idx, comment in enumerate(
+        for idx, comment in enumerate(
                     track(
                         reddit_object["comments"][:screenshot_num],
                         "Downloading screenshots...",
